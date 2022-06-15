@@ -33,6 +33,12 @@ target 'MusicApp' do
   #   use_flipper!()
   # end
 
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
+  pod 'RNSoundPlayer', :path => '../node_modules/react-native-sound-player'
+
+  pod 'react-native-track-player', :path => '../node_modules/react-native-track-player'
+
   post_install do |installer|
     react_native_post_install(installer)
     __apply_Xcode_12_5_M1_post_install_workaround(installer)

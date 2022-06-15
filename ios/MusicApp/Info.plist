@@ -51,5 +51,6 @@
 	<false/>
   <key>UIStatusBarStyle</key>
   <string>UIStatusBarStyleDefault</string>
+  <key>UIAppFonts</key>
 </dict>
 </plist>

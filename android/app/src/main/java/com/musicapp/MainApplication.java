@@ -7,6 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.guichaguri.trackplayer.TrackPlayer;
+import com.zmxv.RNSound.RNSoundPackage;
+import com.johnsonsu.rnsoundplayer.RNSoundPlayerPackage;
+import com.zmxv.RNSound.RNSoundPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -22,30 +26,29 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
-    this,
-    new ReactNativeHost(this) {
-    @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
+      this,
+      new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+          return BuildConfig.DEBUG;
+        }
 
-    @Override
-    protected List<ReactPackage> getPackages() {
-      @SuppressWarnings("UnnecessaryLocalVariable")
-      List<ReactPackage> packages = new PackageList(this).getPackages();
-      // Packages that cannot be autolinked yet can be added manually here, for example:
-      // packages.add(new MyReactNativePackage());
-      return packages;
-    }
+        @Override
+        protected List<ReactPackage> getPackages() {
+          return Arrays.<ReactPackage>asList(
+              new MainReactPackage(),
+            new TrackPlayer(),
+              new RNSoundPackage());
+        }
 
-    @Override
-    protected String getJSMainModuleName() {
-      return "index";
-    }
-  });
+        @Override
+        protected String getJSMainModuleName() {
+          return "index";
+        }
+      });
 
-  private final ReactNativeHost mNewArchitectureNativeHost =
-      new ReactNativeHostWrapper(this, new MainApplicationReactNativeHost(this));
+  private final ReactNativeHost mNewArchitectureNativeHost = new ReactNativeHostWrapper(this,
+      new MainApplicationReactNativeHost(this));
 
   @Override
   public ReactNativeHost getReactNativeHost() {
@@ -74,7 +77,8 @@ public class MainApplication extends Application implements ReactApplication {
   }
 
   /**
-   * Loads Flipper in React Native templates. Call this in the onCreate method with something like
+   * Loads Flipper in React Native templates. Call this in the onCreate method
+   * with something like
    * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
    *
    * @param context
@@ -85,9 +89,9 @@ public class MainApplication extends Application implements ReactApplication {
     if (BuildConfig.DEBUG) {
       try {
         /*
-         We use reflection here to pick up the class that initializes Flipper,
-        since Flipper library is not available in release mode
-        */
+         * We use reflection here to pick up the class that initializes Flipper,
+         * since Flipper library is not available in release mode
+         */
         Class<?> aClass = Class.forName("com.musicapp.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)

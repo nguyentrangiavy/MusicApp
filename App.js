@@ -1,21 +1,49 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import Main from "./components/MainComponent";
+import { Provider } from "react-redux";
+import { ConfigureStore } from "./redux/ConfigureStore";
+import AppContext from "./components/AppContext";
+import { Audio } from "expo-av";
 
-export default function App() {
+const store = ConfigureStore();
+const playbackObj = new Audio.Sound();
+function App() {
+  const [currentSong, setCurrentSong] = useState({
+    albumName: "Different World",
+    category: "Dance/Electronic",
+    id: 0,
+    image: "images/Alan_Walker_Alone.jpg",
+    label: "Trending",
+    name: "Alone",
+    release: "2018",
+    singer: "Alan Walker",
+    url: "audios/Alone-AlanWalker.mp3",
+  });
+  const [soundObj, setSoundObj] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [durationMillis, setDurationMillis] = useState(0);
+  const [positionMillis, setPositionMillis] = useState(0);
+
+  const globalVar = {
+    currentSong: currentSong,
+    setCurrentSong,
+    playbackObj: playbackObj,
+    soundObj: soundObj,
+    setSoundObj,
+    isPlaying: isPlaying,
+    setIsPlaying,
+    durationMillis: durationMillis,
+    setDurationMillis,
+    positionMillis: positionMillis,
+    setPositionMillis,
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <AppContext.Provider value={globalVar}>
+        <Main />
+      </AppContext.Provider>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

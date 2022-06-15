@@ -2,7 +2,6 @@ apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
-
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -86,8 +85,9 @@ project.ext.react = [
     cliPath: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/cli.js",
     hermesCommand: new File(["node", "--print", "require.resolve('hermes-engine/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/%OS-BIN%/hermesc",
     composeSourceMapsPath: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/scripts/compose-source-maps.js",
+    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf' ] // Name of the font files you want to copy
 ]
-
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 apply from: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../react.gradle")
 
 /**
@@ -287,7 +287,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-
+  
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
