@@ -44,13 +44,18 @@ const addComments = (comments) => ({
   type: ActionTypes.ADD_COMMENTS,
   payload: comments,
 });
-export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+export const postComment = (songId, author, comment, avatar) => (dispatch) => {
   var newcmt = {
-    dishId: dishId,
-    rating: rating,
+    songId: songId,
     author: author,
+    avatar: avatar,
     comment: comment,
-    date: new Date().toISOString(),
+    date:
+      new Date().toLocaleTimeString().substring(0, 5) +
+      " " +
+      new Date().toLocaleDateString().substring(3, 6) +
+      new Date().toLocaleDateString().substring(0, 3) +
+      new Date().toLocaleDateString().substring(6, 8),
   };
   fetch(baseUrl + "comments", {
     method: "POST",
@@ -71,12 +76,10 @@ const addComment = (newcmt) => ({
 });
 
 // favorites
-export const postFavorite = (dishId) => (dispatch) => {
-  setTimeout(() => {
-    dispatch(addFavorite(dishId));
-  }, 1000);
+export const postFavorite = (songId) => (dispatch) => {
+  dispatch(addFavorite(songId));
 };
-const addFavorite = (dishId) => ({
+const addFavorite = (songId) => ({
   type: ActionTypes.ADD_FAVORITE,
-  payload: dishId,
+  payload: songId,
 });

@@ -1,4 +1,4 @@
-import { Component, useContext } from "react";
+import { Component, useContext, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -9,11 +9,17 @@ import {
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Avatar } from "react-native-elements";
 import { baseUrl } from "./../shared/baseUrl";
-import AppContext from "./AppContext";
+import AppContext from "../context/AppContext";
+import { playPause, playPreviousOrNext } from "../controller/songController";
+import { connect } from "react-redux";
 
-function SongPlayerBar({ song, playPause }) {
+const mapStateToProps = (state) => {
+  return {
+    songs: state.songs,
+  };
+};
+function SongPlayerBar({ songs }) {
   const myContext = useContext(AppContext);
-
   return (
     <View style={styles.songBar}>
       <View style={styles.songBarItemLeft}>
@@ -21,14 +27,14 @@ function SongPlayerBar({ song, playPause }) {
           rounded
           containerStyle={styles.avatar}
           source={{
-            uri: baseUrl + song.image,
+            uri: baseUrl + myContext.currentSong.image,
           }}
         />
         <View style={styles.songTitle}>
           <Text style={{ fontSize: 12, color: "#EEEEEE" }}>
-            {song.name.length <= 25
-              ? song.name
-              : song.name.substring(0, 22) + "..."}
+            {myContext.currentSong.name.length <= 25
+              ? myContext.currentSong.name
+              : myContext.currentSong.name.substring(0, 22) + "..."}
           </Text>
           <Text
             style={{
@@ -36,20 +42,25 @@ function SongPlayerBar({ song, playPause }) {
               color: "#EEEEEE",
             }}
           >
-            {song.singer.length <= 30
-              ? song.singer
-              : song.singer.substring(0, 27) + "..."}
+            {myContext.currentSong.singer.length <= 30
+              ? myContext.currentSong.singer
+              : myContext.currentSong.singer.substring(0, 27) + "..."}
           </Text>
         </View>
       </View>
       <View style={styles.songBarItemRight}>
-        <TouchableOpacity style={styles.iconBtn} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.iconBtn}
+          onPress={() => {
+            playPreviousOrNext(myContext, songs, "previous");
+          }}
+        >
           <MaterialIcons name={"skip-previous"} size={36} color={"#EEEEEE"} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.iconBtn}
           onPress={() => {
-            playPause();
+            playPause(myContext);
           }}
         >
           <MaterialIcons
@@ -58,14 +69,19 @@ function SongPlayerBar({ song, playPause }) {
             color={"#EEEEEE"}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconBtn} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.iconBtn}
+          onPress={() => {
+            playPreviousOrNext(myContext, songs, "next");
+          }}
+        >
           <MaterialIcons name={"skip-next"} size={36} color={"#EEEEEE"} />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-export default SongPlayerBar;
+export default connect(mapStateToProps)(SongPlayerBar);
 const styles = StyleSheet.create({
   songBar: {
     flexDirection: "row",

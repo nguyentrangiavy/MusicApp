@@ -77,8 +77,8 @@ class CarouselCards extends Component {
         style={styles.container}
         key={index}
         onPress={() => {
-          this.props.pressSong(item);
-          navigate("SongPlayer", { songId: item.id });
+          this.props.pressSong(this.props.context, item);
+          navigate("SongPlayer");
         }}
       >
         <Image source={{ uri: baseUrl + item.image }} style={styles.image} />

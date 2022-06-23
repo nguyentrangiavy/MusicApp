@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Dimensions, View } from "react-native";
-import SongPlayerBar from "./SongPlayerBar";
+import SongPlayerBar from "../components/SongPlayerBar";
 
 class MySongs extends Component {
   render() {

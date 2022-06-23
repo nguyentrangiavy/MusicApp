@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from "react";
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -8,20 +7,12 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import CarouselCards from "./CarouselCardsComponent";
+import CarouselCards from "../components/CarouselCardsComponent";
 import { connect } from "react-redux";
-import SongPlayerBar from "./SongPlayerBar";
-import AppContext from "./AppContext";
-import { baseUrl } from "./../shared/baseUrl";
-import {
-  play,
-  playOther,
-  replay,
-  pause,
-  resume,
-  playPrevious,
-} from "../misc/songController";
-import Loading from "./LoadingComponent";
+import SongPlayerBar from "../components/SongPlayerBar";
+import AppContext from "../context/AppContext";
+import { pressSong } from "../controller/songController";
+import Loading from "../components/LoadingComponent";
 
 const mapStateToProps = (state) => {
   return {
@@ -39,63 +30,17 @@ function Library({ navigation, songs }) {
     (songs) => songs.category === "Dance/Electronic"
   );
   const popSongs = songs.songs.filter((songs) => songs.category === "Pop");
+  useEffect(() => {
+    // Loading 3s before show screen content
 
-  const pressSong = async (song) => {
-    if (myContext.soundObj === null) {
-      const status = await play(myContext.playbackObj, baseUrl + song.url);
-      myContext.setSoundObj(status);
-      myContext.setCurrentSong(song);
-      myContext.setIsPlaying(true);
-      console.log("Playing first song...");
-    } else {
-      if (myContext.currentSong.id !== song.id) {
-        const status = await playOther(
-          myContext.playbackObj,
-          baseUrl + song.url
-        );
-        myContext.setSoundObj(status);
-        myContext.setCurrentSong(song);
-        myContext.setIsPlaying(true);
-        console.log("Playing another song...");
-      } else {
-        const playbackStatus = await myContext.playbackObj.getStatusAsync();
-        if (playbackStatus.isPlaying === false) {
-          await replay(myContext.playbackObj);
-          myContext.setIsPlaying(true);
-          console.log("Playing song again after finished...");
-        }
-      }
+    if (!myContext.loaded) {
+      setTimeout(() => {
+        myContext.setLoaded(true);
+        // myContext.setSongs(songs);
+      }, 3000);
     }
-  };
-  const playPause = async () => {
-    const playbackStatus = await myContext.playbackObj.getStatusAsync();
-    console.log(playbackStatus.isPlaying + " - " + playbackStatus.isLoaded);
-    if (playbackStatus.isPlaying === true && playbackStatus.isLoaded === true) {
-      const status = await pause(myContext.playbackObj);
-      myContext.setSoundObj(status);
-      myContext.setPositionMillis(playbackStatus.positionMillis);
-      myContext.setIsPlaying(false);
-      console.log("paused");
-    }
-    if (
-      playbackStatus.isPlaying === false &&
-      playbackStatus.isLoaded === true
-    ) {
-      await resume(myContext.playbackObj, myContext.positionMillis);
-      myContext.setIsPlaying(true);
-      console.log("resumed");
-    }
-  };
-  const playPreviousSong = async () => {
-    const previousSong = songs.songs.filter(
-      (song) => song.id === myContext.currentSong.id
-    );
-    const status = await playPrevious(
-      myContext.playbackObj,
-      baseUrl + previousSong.url
-    );
-  };
-  if (songs != null) {
+  }, []);
+  if (myContext.loaded) {
     return (
       <React.Fragment>
         <StatusBar backgroundColor="#222831" />
@@ -145,7 +90,7 @@ function Library({ navigation, songs }) {
               })
             }
           >
-            <SongPlayerBar song={myContext.currentSong} playPause={playPause} />
+            <SongPlayerBar />
           </TouchableOpacity>
         </View>
       </React.Fragment>
